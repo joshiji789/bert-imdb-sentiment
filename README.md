@@ -21,22 +21,22 @@ Here's the proposed project structure:
  │ ├── lora.yaml
  │ └── qlora.yaml
  ├── src/
- │ ├── data.py # load IMDB, tokenize, build DataLoaders (shared, untouched test set)
- │ ├── models.py # build model per strategy: frozen head / full FT / LoRA / QLoRA
- │ ├── train.py # training loop, takes a config, saves checkpoint + metrics
- │ ├── evaluate.py # runs a saved model (or the raw pretrained model) on the test set ->
+ │ ├── data.py          # load IMDB, tokenize, build DataLoaders (shared, untouched test set)
+ │ ├── models.py        # build model per strategy: frozen head / full FT / LoRA / QLoRA
+ │ ├── train.py         # training loop, takes a config, saves checkpoint + metrics
+ │ ├── evaluate.py      # runs a saved model (or the raw pretrained model) on the test set ->
  accuracy, F1, confusion matrix
- │ └── utils.py # seeding, device selection (mps/cuda/cpu), logging helpers
+ │ └── utils.py         # seeding, device selection (mps/cuda/cpu), logging helpers
  ├── scripts/
- │ ├── run_train.py # CLI: python scripts/run_train.py --config configs/lora.yaml
- │ └── run_eval.py # CLI: python scripts/run_eval.py --checkpoint ...
+ │ ├── run_train.py         # CLI: python scripts/run_train.py --config configs/lora.yaml
+ │ └── run_eval.py          # CLI: python scripts/run_eval.py --checkpoint
  ├── notebooks/
- │ ├── 01_download_and_explore.ipynb # (existing)
- │ └── 02_compare_results.ipynb # loads all saved metrics, builds final comparison
+ │ ├── 01_download_and_explore.ipynb    #
+ │ └── 02_compare_results.ipynb          # loads all saved metrics, builds final comparison
  table/plots
  ├── results/
- │ ├── metrics/ # one JSON per run: {strategy, lr, accuracy, f1, confusion_matrix,
+ │ ├── metrics/                     # one JSON per run: {strategy, lr, accuracy, f1, confusion_matrix,
  ...}
- │ └── checkpoints/ # saved fine-tuned weights (gitignored — large files)
+ │ └── checkpoints/                 # saved fine-tuned weights (gitignored — large files)
  └── tests/
- └── test_data.py # sanity checks on tokenization/splits
+ └── test_data.py                   # sanity checks on tokenization/splits
