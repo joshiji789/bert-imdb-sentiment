@@ -1,0 +1,10 @@
+pandas
+matplotlib
+seaborn 
+jupyter
+datasets
+torch
+transformers
+scikit-learn
+peft
+pyyaml
