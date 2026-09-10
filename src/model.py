@@ -77,5 +77,29 @@ def _build_lora_model(strategy, model_name, lora_r, lora_alpha, lora_dropout, lo
 
     return get_peft_model(base_model, lora_config)
 
-def build_model():
+def build_model(strategy, model_name, lora_r = 8, lora_alpha = 16, lora_dropout = 0.1,
+                lora_target_modules = ("query", "value")):
+
+    if strategy not in STRATEGIES:
+        raise ValueError(f"Invalid Strategy: {strategy}. Must be one of the {STRATEGIES}")
+    """
+    For pretrained, we load the pretrained model and freeze all parameters
+    """
+    if strategy == "pretrained":
+        model = AutoModelForSequenceClassification.from_pretrained(
+            model_name, num_labels = NUM_LABELS, attn_implementation = "eager"
+        )
+        for param in model.parameters():
+            param.requires_grad = False
+        return model
+
+    """
+    For head-only, we freeze the entire BERT model, and only allow the classification head to be trained.
+    """
+
+    """
+    For full-finetune, we load the pretrained model and allow all parameters to be trained.
+    """
+
+
     return None
