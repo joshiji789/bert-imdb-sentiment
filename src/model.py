@@ -98,8 +98,17 @@ def build_model(strategy, model_name, lora_r = 8, lora_alpha = 16, lora_dropout 
     """
 
     """
+    For frozen-transformer, we freeze the entire BERT mode, and allow the pooler layer and
+    classification head to the trained.
+    """
+
+    """
     For full-finetune, we load the pretrained model and allow all parameters to be trained.
     """
 
+    """
+    For LoRA, and QLoRA, share the same code setup - 
+    they only differ in whether the frozen base weights are loaded in 4-bit or full precision.
+    """
 
     return None
