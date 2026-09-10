@@ -12,6 +12,7 @@ Plus we'll sweep a couple of different learning rates per method (methods 2–6 
 
 Here's the proposed project structure:
 
+```
  bert-imdb-sentiment/
  ├── README.md
  ├── requirements.txt
@@ -40,3 +41,4 @@ Here's the proposed project structure:
  │ └── checkpoints/                 # saved fine-tuned weights (gitignored — large files)
  └── tests/
  └── test_data.py                   # sanity checks on tokenization/splits
+ ```
