@@ -69,7 +69,7 @@ def main():
         lora_r = config.get("lora_r", 8),
         lora_alpha = config.get("lora_alpha", 16),
         lora_dropout = config.get("lora_droput", 0.1),
-        lora_target_modiles = config.get("lora_target_modules", ["query", "values"])
+        lora_target_modules = config.get("lora_target_modules", ["query", "values"])
     )
 
     history = train_model(
@@ -77,7 +77,7 @@ def main():
         train_loader, 
         device,
         learning_rate = config["learning_rate"],
-        num_epochs = config.get["num_epochs", 3],
+        num_epochs = config.get("num_epochs", 10),
         weight_decay = config.get("weight_decay", 0.01),
         warmup_ratio = config.get("warmup_ratio", 0.1)
     )

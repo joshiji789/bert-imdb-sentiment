@@ -42,3 +42,11 @@ Here's the proposed project structure:
  └── tests/
  └── test_data.py                   # sanity checks on tokenization/splits
  ```
+
+```
+python -m pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu126    
+```
+
+### Commands to run the code
+python scripts/run_train.py --config configs/head-only.yaml --learning_rate 1e-3 --run_name head-only_lr1e-3
+python scripts/run_train.py --config configs/head-only.yaml --learning_rate 1e-4 --run_name head-only_lr1e-4

@@ -104,7 +104,7 @@ def build_model(strategy, model_name, lora_r = 8, lora_alpha = 16, lora_dropout 
         )
         # attn_implementation = "eager" is a new option in transformers which is used to speed up the attention computation.
 
-        _freeze_all_except(model, trainable_parefixes = ("classifier"))
+        _freeze_all_except(model, trainable_prefixes = ("classifier"))
 
         return model
 
