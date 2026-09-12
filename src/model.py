@@ -13,12 +13,14 @@ zero-shot baseline head only | embeddings + all 12 trainsformer layers (frozen) 
 
 frozen transformer | embeddings + all 12 transformer layer (frozen) | pooler layer + classification layer
 
-full-fine-tuning | nothing | every parameter in the model
-
 LoRA | the original BERT weights | small LoRA adapter matrics + classification 
 
 QLoRA | same as LoRA, base weights loaded in 4 bit (CUDA only)
+
+full-fine-tuning | nothing | every parameter in the model
+
 """
+
 import logging
 import torch
 from pathlib import Path
@@ -81,7 +83,7 @@ def build_model(strategy, model_name, lora_r = 8, lora_alpha = 16, lora_dropout 
                 lora_target_modules = ("query", "value")):
 
     if strategy not in STRATEGIES:
-        raise ValueError(f"Invalid Strategy: {strategy}. Must be one of the {STRATEGIES}")
+        raise ValueError(f"Invalid Strategy: {strategy}. Must be one of the {STRATEGIES}", status_code = 400)
     """
     For pretrained, we load the pretrained model and freeze all parameters
     """
@@ -96,10 +98,39 @@ def build_model(strategy, model_name, lora_r = 8, lora_alpha = 16, lora_dropout 
     """
     For head-only, we freeze the entire BERT model, and only allow the classification head to be trained.
     """
+    if strategy == "head-only":
+        model = AutoModelForSequenceClassification.from_pretrained(
+            model_name, num_labels = NUM_LABELS, attn_implementation = "eager"
+        )
+        # attn_implementation = "eager" is a new option in transformers which is used to speed up the attention computation.
+
+        _freeze_all_except(model, trainable_parefixes = ("classifier"))
+
+        return model
+
+    """
+    For frozen-transformer, we freeze the entire BERT mode, and allow the pooler layer and
+    classification head to the trained.
+    """
+    if strategy == "frozen-transformer":
+        model = AutoModelForSequenceClassification.from_pretained(
+            model_name, num_labels = NUM_LABELS, attn_implementation = "eager"
+        )
+        _freeze_all_except(model, trainable_prefixes = ("pooler", "classifier"))
+        return model
+    
+    """
+    For LoRA, and QLoRA, share the same code setup - 
+    they only differ in whether the frozen base weights are loaded in 4-bit or full precision.
+    """
+    if strategy in ("lora", "qlora"):
+        return _build_lora_model(strategy, model_name, lora_r, lora_alpha, lora_dropout, lora_target_modules)
 
     """
     For full-finetune, we load the pretrained model and allow all parameters to be trained.
     """
-
-
-    return None
+    if strategy == "full-finetune":
+        model = AutoModelForSequenceClassification.from_pretrained(
+            model_name, num_labels = NUM_LABELS, attn_implementation = "eager"
+        )
+        return model
