@@ -69,7 +69,7 @@ def main():
         lora_r = config.get("lora_r", 8),
         lora_alpha = config.get("lora_alpha", 16),
         lora_dropout = config.get("lora_dropout", 0.1),
-        lora_target_modules = config.get("lora_target_modules", ["query", "values"])
+        lora_target_modules = config.get("lora_target_modules", ["query", "value"])
     )
 
     history = train_model(
@@ -93,7 +93,7 @@ def main():
         "strategy": config["strategy"],
         "model_name": config["model_name"],
         "learning_rate": config["learning_rate"],
-        "num_epochs": config["num_epochs", 10],
+        "num_epochs": config.get("num_epochs", 10),
         "checkpoint_dir": str(checkpoint_dir),
         "train_history": history,
         **metrics
