@@ -68,7 +68,7 @@ def main():
         model_name = config["model_name"],
         lora_r = config.get("lora_r", 8),
         lora_alpha = config.get("lora_alpha", 16),
-        lora_dropout = config.get("lora_droput", 0.1),
+        lora_dropout = config.get("lora_dropout", 0.1),
         lora_target_modules = config.get("lora_target_modules", ["query", "values"])
     )
 
