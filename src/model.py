@@ -116,7 +116,7 @@ def build_model(strategy, model_name, lora_r = 8, lora_alpha = 16, lora_dropout 
         model = AutoModelForSequenceClassification.from_pretrained(
             model_name, num_labels = NUM_LABELS, attn_implementation = "eager"
         )
-        _freeze_all_except(model, trainable_prefixes = ("pooler", "classifier"))
+        _freeze_all_except(model, trainable_prefixes = ("bert.pooler", "classifier"))
         return model
     
     """
