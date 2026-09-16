@@ -11,7 +11,7 @@ Compare 6 things on the exact same untouched IMDB test set (accuracy, precision,
 Plus we'll sweep a couple of different learning rates per method (methods 2–6 — there's nothing to tune for the pretrained baseline).
 
 The Results below shows the after fine-tuning: \
-![Training Loss vs. Epoch](results\figures\loss_vs_epoch.png)
+<img src="results/figures/loss_vs_epoch.png" alt="Loss vs Epoch" width="600"/>
 
 Here's the proposed project structure:
 
