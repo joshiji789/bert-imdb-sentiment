@@ -30,7 +30,7 @@ def evaluate_model(model, eval_loader, device):
     for batch in eval_loader:
         input_ids = batch["input_ids"].to(device)
         attention_mask = batch["attention_mask"].to(device)
-        labels = batch["labels"]
+        labels = batch["label"]
 
         outputs = model(input_ids = input_ids, attention_mask = attention_mask)
 

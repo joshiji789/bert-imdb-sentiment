@@ -37,7 +37,7 @@ def train_model(model, train_loader, device, learning_rate, num_epochs,
 
     total_steps = len(train_loader)*num_epochs
     scheduler = get_linear_schedule_with_warmup(optimizer, 
-                                                num_warmup_step     = int(total_steps*warmup_ratio),
+                                                num_warmup_steps     = int(total_steps*warmup_ratio),
                                                 num_training_steps  = total_steps)
 
     history = []
@@ -55,7 +55,7 @@ def train_model(model, train_loader, device, learning_rate, num_epochs,
             labels = batch["label"].to(device)
 
             # Passing "labels" makes the model compute and return the loss itself
-            outputs = model(inputs = input_ids, attention_mask = attention_mask, labels = labels)
+            outputs = model(input_ids = input_ids, attention_mask = attention_mask, labels = labels)
             outputs.loss.backward()
             optimizer.step()
             scheduler.step()
@@ -66,7 +66,7 @@ def train_model(model, train_loader, device, learning_rate, num_epochs,
 
         elapsed = time.time() - start
         if epoch%log_every == 0:
-            logger.info("epoch %d/%d finished - avg loss %.5f-0.1fs", 
+            logger.info("epoch %d/%d finished - avg loss %.5f-%.1fs", 
                         epoch+1, num_epochs, avg_loss, elapsed)
 
         history.append({"epoch": epoch+1,

@@ -42,3 +42,27 @@ Here's the proposed project structure:
  └── tests/
  └── test_data.py                   # sanity checks on tokenization/splits
  ```
+
+```
+python -m pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu126    
+```
+
+### Commands to run the code
+- The learning rate if 10^(-3) and 10^(-4)
+python scripts/run_train.py --config configs/head-only.yaml --learning_rate 1e-3 --run_name head-only_lr1e-3
+python scripts/run_train.py --config configs/head-only.yaml --learning_rate 1e-4 --run_name head-only_lr1e-4
+
+
+- The learning rate if 10^(-3) and 10^(-4)
+python scripts/run_train.py --config configs/frozen-transformer.yaml --learning_rate 1e-3 --run_name frozen-transformer_lr1e-3
+python scripts/run_train.py --config configs/frozen-transformer.yaml --learning_rate 1e-4 --run_name frozen-transformer_lr1e-4
+
+- The learning rate if 10^(-3) and 10^(-4) (But these values are two high for the full-fine tuning)
+python scripts/run_train.py --config configs/full-finetune.yaml --learning_rate 1e-3 --run_name full-finetune_lr1e-3
+python scripts/run_train.py --config configs/full-finetune.yaml --learning_rate 1e-4 --run_name full-finetune_lr1e-4
+python scripts/run_train.py --config configs/full-finetune.yaml --learning_rate 2e-5 --run_name full-finetune_lr2e-5
+python scripts/run_train.py --config configs/full-finetune.yaml --learning_rate 5e-5 --run_name full-finetune_lr5e-5
+
+- LoRA and QLoRA
+python scripts/run_train.py --config configs/lora.yaml --learning_rate 2e-4 --run_name lora_lr2e-4
+python scripts/run_train.py --config configs/lora.yaml --learning_rate 5e-5 --run_name lora_lr5e-5

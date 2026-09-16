@@ -4,7 +4,7 @@ import numpy as np
 import torch
 
 ## Constants
-IMDB_DATASET_NAME = "standfordnlp/IMDB"
+IMDB_DATASET_NAME = "stanfordnlp/imdb"
 NUM_LABELS = 2
 
 ## Set Seed
@@ -18,7 +18,7 @@ def set_seed(seed = int(42)):
     np.random.seed(seed)
     torch.manual_seed(seed)
 
-    if torch.cuda_is_available():
+    if torch.cuda.is_available():
         torch.cuda.manual_seed_all(seed)
 
     if torch.backends.mps.is_available():

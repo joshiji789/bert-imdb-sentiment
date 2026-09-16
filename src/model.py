@@ -72,7 +72,7 @@ def _build_lora_model(strategy, model_name, lora_r, lora_alpha, lora_dropout, lo
         task_type = TaskType.SEQ_CLS,
         r = lora_r,                         # rank of the LoRA adapter matrics - higher = more capacity/params
         lora_alpha = lora_alpha,            # scaling factor applied to the LoRA update
-        lora_droupout = lora_dropout,       # dropout inside the adapter, for regularization
+        lora_dropout = lora_dropout,       # dropout inside the adapter, for regularization
         target_modules = lora_target_modules, # Which layer get adapter (attention query/value projections)
         modules_to_save = ["classifier"]      # which modules to save when saving the model
     )
@@ -83,7 +83,7 @@ def build_model(strategy, model_name, lora_r = 8, lora_alpha = 16, lora_dropout 
                 lora_target_modules = ("query", "value")):
 
     if strategy not in STRATEGIES:
-        raise ValueError(f"Invalid Strategy: {strategy}. Must be one of the {STRATEGIES}", status_code = 400)
+        raise TypeError(f"Invalid Strategy: {strategy}. Must be one of the {STRATEGIES}", status_code = 400)
     """
     For pretrained, we load the pretrained model and freeze all parameters
     """
@@ -104,7 +104,7 @@ def build_model(strategy, model_name, lora_r = 8, lora_alpha = 16, lora_dropout 
         )
         # attn_implementation = "eager" is a new option in transformers which is used to speed up the attention computation.
 
-        _freeze_all_except(model, trainable_parefixes = ("classifier"))
+        _freeze_all_except(model, trainable_prefixes = ("classifier"))
 
         return model
 
@@ -113,7 +113,7 @@ def build_model(strategy, model_name, lora_r = 8, lora_alpha = 16, lora_dropout 
     classification head to the trained.
     """
     if strategy == "frozen-transformer":
-        model = AutoModelForSequenceClassification.from_pretained(
+        model = AutoModelForSequenceClassification.from_pretrained(
             model_name, num_labels = NUM_LABELS, attn_implementation = "eager"
         )
         _freeze_all_except(model, trainable_prefixes = ("pooler", "classifier"))
