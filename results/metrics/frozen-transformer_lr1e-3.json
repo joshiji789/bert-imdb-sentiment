@@ -1,0 +1,74 @@
+{
+  "run_name": "frozen-transformer_lr1e-3",
+  "strategy": "frozen-transformer",
+  "model_name": "bert-base-uncased",
+  "learning_rate": 0.001,
+  "num_epochs": 10,
+  "checkpoint_dir": "results\\checkpoints\\frozen-transformer_lr1e-3",
+  "train_history": [
+    {
+      "epoch": 1,
+      "loss": 0.6299088455655288,
+      "seconds": 762.0238261222839
+    },
+    {
+      "epoch": 2,
+      "loss": 0.5488328312786251,
+      "seconds": 759.8512439727783
+    },
+    {
+      "epoch": 3,
+      "loss": 0.5275774477342803,
+      "seconds": 745.9832081794739
+    },
+    {
+      "epoch": 4,
+      "loss": 0.5155741718042027,
+      "seconds": 809.7937505245209
+    },
+    {
+      "epoch": 5,
+      "loss": 0.5131694600321042,
+      "seconds": 791.3185422420502
+    },
+    {
+      "epoch": 6,
+      "loss": 0.5094588782420584,
+      "seconds": 821.9722363948822
+    },
+    {
+      "epoch": 7,
+      "loss": 0.503429129671882,
+      "seconds": 789.1356618404388
+    },
+    {
+      "epoch": 8,
+      "loss": 0.5036752617121815,
+      "seconds": 740.5803453922272
+    },
+    {
+      "epoch": 9,
+      "loss": 0.5016149894580216,
+      "seconds": 574.5506660938263
+    },
+    {
+      "epoch": 10,
+      "loss": 0.498309705652866,
+      "seconds": 576.8872904777527
+    }
+  ],
+  "accuracy": 0.78968,
+  "precision": 0.7732830188679245,
+  "recall": 0.81968,
+  "f1": 0.7958058252427185,
+  "confusion_matrix": [
+    [
+      9496,
+      3004
+    ],
+    [
+      2254,
+      10246
+    ]
+  ]
+}

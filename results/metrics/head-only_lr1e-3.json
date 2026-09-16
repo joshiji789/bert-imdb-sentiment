@@ -1,0 +1,74 @@
+{
+  "run_name": "head-only_lr1e-3",
+  "strategy": "head-only",
+  "model_name": "bert-base-uncased",
+  "learning_rate": 0.001,
+  "num_epochs": 10,
+  "checkpoint_dir": "results\\checkpoints\\head-only_lr1e-3",
+  "train_history": [
+    {
+      "epoch": 1,
+      "loss": 0.6299088455655288,
+      "seconds": 269.04027366638184
+    },
+    {
+      "epoch": 2,
+      "loss": 0.5488328312786251,
+      "seconds": 369.69178199768066
+    },
+    {
+      "epoch": 3,
+      "loss": 0.5275774477342803,
+      "seconds": 400.1818687915802
+    },
+    {
+      "epoch": 4,
+      "loss": 0.5155741718042027,
+      "seconds": 442.88552594184875
+    },
+    {
+      "epoch": 5,
+      "loss": 0.5131694600321042,
+      "seconds": 552.4112005233765
+    },
+    {
+      "epoch": 6,
+      "loss": 0.5094588782420584,
+      "seconds": 542.588864326477
+    },
+    {
+      "epoch": 7,
+      "loss": 0.503429129671882,
+      "seconds": 543.0665545463562
+    },
+    {
+      "epoch": 8,
+      "loss": 0.5036752617121815,
+      "seconds": 540.8618443012238
+    },
+    {
+      "epoch": 9,
+      "loss": 0.5016149894580216,
+      "seconds": 541.2795505523682
+    },
+    {
+      "epoch": 10,
+      "loss": 0.498309705652866,
+      "seconds": 539.6473245620728
+    }
+  ],
+  "accuracy": 0.78968,
+  "precision": 0.7732830188679245,
+  "recall": 0.81968,
+  "f1": 0.7958058252427185,
+  "confusion_matrix": [
+    [
+      9496,
+      3004
+    ],
+    [
+      2254,
+      10246
+    ]
+  ]
+}

@@ -15,7 +15,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 # Hugging class that can load a BERT classification model, either from the HUB
 # or from the local folder.
 from transformers import AutoModelForSequenceClassification
-from src.data import build_eval_dataloader, load_tokenizer_imdb
+from src.data import build_eval_dataloader, load_tokenized_imdb
 from src.evaluate import evaluate_model
 from src.utils import NUM_LABELS, get_device
 
@@ -27,7 +27,7 @@ def parse_args():
 
     # --pretrained and --checkpoint are mutually exclusive (never both, never neither)
     group = parser.add_mutually_exclusive_group(required=True)
-    group.add_argument("--pretrianed", help = "HF model name to evalute zero-shot, bert-base-uncased")
+    group.add_argument("--pretrained", help = "HF model name to evalute zero-shot, bert-base-uncased")
     group.add_argument("--checkpoint", help = "Path to checkpoint directory saved by run_train.py")
 
 
@@ -67,7 +67,7 @@ def _load_model_for_eval(checkpoint_dir):
         # weights and the trained classifier head on top of that fresh model.
         return PeftModel.from_pretrained(base_model, checkpoint_dir)
 
-    return AutoModelForSequenceClassification.from_pretrained(base_model, checkpoint_dir)
+    return AutoModelForSequenceClassification.from_pretrained(checkpoint_dir, num_labels = NUM_LABELS)
 
 def main():
     # parse the command-line flags first
@@ -76,7 +76,7 @@ def main():
     # If args.checkpoint is non-empty string use it; otherwise use args.pretrained
     tokenizer_soruce = args.checkpoint or args.pretrained
 
-    _, test_dataset, _ = load_tokenizer_imdb(
+    _, test_dataset, _ = load_tokenized_imdb(
         tokenizer_soruce, 
         max_seq_length = args.max_seq_length,
         load_train = False
@@ -106,7 +106,7 @@ def main():
     with open(metrics_dir/f"{args.run_name}.json", "w") as f:
         json.dump(result, f, indent = 2)
 
-    print(json.dump(result, indent = 2))
+    print(json.dumps(result, indent = 2))
 
 
 if __name__ == "__main__":

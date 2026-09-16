@@ -4,7 +4,7 @@ import re
 from datasets import load_dataset
 from torch.utils.data import DataLoader
 from transformers import AutoTokenizer
-from src.utils import IMDB_DATASET_NAME, NUM_LABELS
+from src.utils import IMDB_DATASET_NAME
 
 TENSOR_COUMNS = ["input_ids", "attention_mask", "label"]
 
@@ -67,5 +67,5 @@ def load_tokenized_imdb(model_name, max_seq_length = 256,
 def build_train_dataloader(train_dataset, batch_size =16):
     return DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
 
-def build_test_dataloader(test_dataset, batch_size = 16):
+def build_eval_dataloader(test_dataset, batch_size = 16):
     return DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
