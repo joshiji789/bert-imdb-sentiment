@@ -1,5 +1,5 @@
 # bert-imdb-sentiment
-## END GOAL
+## GOAL
 Compare 6 things on the exact same untouched IMDB test set (accuracy, precision, recall, F1, confusion matrix)
 1. **Pretrained BERT** — zero-shot, no training at all. Raw `bert-base-uncased` with a randomly initialized classifier head; expected to land close to chance (~50%), since the head has never learned anything.
 2. **Head-only fine-tune** — BERT itself (embeddings + all 12 transformer layers + pooler) fully frozen; only the final linear classifier layer is trained. The purest "linear probe on frozen BERT features" baseline.
@@ -9,6 +9,9 @@ Compare 6 things on the exact same untouched IMDB test set (accuracy, precision,
 6. **QLoRA fine-tuning** — same as LoRA, but the frozen base weights are loaded in 4-bit precision. Requires a CUDA GPU (bitsandbytes); falls back to standard LoRA on this machine (Apple Silicon / MPS, no CUDA).
 
 Plus we'll sweep a couple of different learning rates per method (methods 2–6 — there's nothing to tune for the pretrained baseline).
+
+The Results below shows the after fine-tuning: \
+<img src="results/figures/loss_vs_epoch.png" alt="Loss vs Epoch" width="800"/>
 
 Here's the proposed project structure:
 
@@ -48,21 +51,22 @@ python -m pip install torch torchvision torchaudio --index-url https://download.
 ```
 
 ### Commands to run the code
-- The learning rate if 10^(-3) and 10^(-4)
+- Command to run the head only fine-tuning with learning rate 10^(-3) and 10^(-4)
 python scripts/run_train.py --config configs/head-only.yaml --learning_rate 1e-3 --run_name head-only_lr1e-3
 python scripts/run_train.py --config configs/head-only.yaml --learning_rate 1e-4 --run_name head-only_lr1e-4
 
 
-- The learning rate if 10^(-3) and 10^(-4)
+- Command to run the frozen-transformer fine-tuning with learning rate 10^(-3) and 10^(-4)
 python scripts/run_train.py --config configs/frozen-transformer.yaml --learning_rate 1e-3 --run_name frozen-transformer_lr1e-3
 python scripts/run_train.py --config configs/frozen-transformer.yaml --learning_rate 1e-4 --run_name frozen-transformer_lr1e-4
 
-- The learning rate if 10^(-3) and 10^(-4) (But these values are two high for the full-fine tuning)
+- Commands to run the full-finetune where learning rate is 10^(-3) and 10^(-4) (But these values are two high for the full-fine tuning), so we have also used the \
+values of O(10^(-5)).
 python scripts/run_train.py --config configs/full-finetune.yaml --learning_rate 1e-3 --run_name full-finetune_lr1e-3
 python scripts/run_train.py --config configs/full-finetune.yaml --learning_rate 1e-4 --run_name full-finetune_lr1e-4
 python scripts/run_train.py --config configs/full-finetune.yaml --learning_rate 2e-5 --run_name full-finetune_lr2e-5
 python scripts/run_train.py --config configs/full-finetune.yaml --learning_rate 5e-5 --run_name full-finetune_lr5e-5
 
-- LoRA and QLoRA
+- Commands to run the LoRA and QLoRA with the learning rate of 2e-4 and 5e-5.
 python scripts/run_train.py --config configs/lora.yaml --learning_rate 2e-4 --run_name lora_lr2e-4
 python scripts/run_train.py --config configs/lora.yaml --learning_rate 5e-5 --run_name lora_lr5e-5
