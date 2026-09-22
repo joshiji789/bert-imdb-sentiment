@@ -70,3 +70,5 @@ python scripts/run_train.py --config configs/full-finetune.yaml --learning_rate 
 - Commands to run the LoRA and QLoRA with the learning rate of 2e-4 and 5e-5.
 python scripts/run_train.py --config configs/lora.yaml --learning_rate 2e-4 --run_name lora_lr2e-4
 python scripts/run_train.py --config configs/lora.yaml --learning_rate 5e-5 --run_name lora_lr5e-5
+python scripts/run_train.py --config configs/qlora.yaml --learning_rate 2e-4 --run_name qlora_lr2e-4
+python scripts/run_train.py --config configs/qlora.yaml --learning_rate 5e-5 --run_name qlora_lr5e-5

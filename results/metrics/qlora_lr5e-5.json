@@ -1,0 +1,74 @@
+{
+  "run_name": "qlora_lr5e-5",
+  "strategy": "qlora",
+  "model_name": "bert-base-uncased",
+  "learning_rate": 5e-05,
+  "num_epochs": 10,
+  "checkpoint_dir": "results\\checkpoints\\qlora_lr5e-5",
+  "train_history": [
+    {
+      "epoch": 1,
+      "loss": 0.5313118748563026,
+      "seconds": 596.7627704143524
+    },
+    {
+      "epoch": 2,
+      "loss": 0.27961599599754267,
+      "seconds": 598.1008501052856
+    },
+    {
+      "epoch": 3,
+      "loss": 0.2515664596742231,
+      "seconds": 601.904146194458
+    },
+    {
+      "epoch": 4,
+      "loss": 0.2394110794031398,
+      "seconds": 601.4709641933441
+    },
+    {
+      "epoch": 5,
+      "loss": 0.22663196684719664,
+      "seconds": 602.6015543937683
+    },
+    {
+      "epoch": 6,
+      "loss": 0.21746116636264723,
+      "seconds": 604.42893242836
+    },
+    {
+      "epoch": 7,
+      "loss": 0.21246380894878544,
+      "seconds": 606.3594563007355
+    },
+    {
+      "epoch": 8,
+      "loss": 0.20701886722895776,
+      "seconds": 606.5243365764618
+    },
+    {
+      "epoch": 9,
+      "loss": 0.20346878847620506,
+      "seconds": 604.8513853549957
+    },
+    {
+      "epoch": 10,
+      "loss": 0.2027424265066486,
+      "seconds": 586.8136923313141
+    }
+  ],
+  "accuracy": 0.91452,
+  "precision": 0.9051528657439988,
+  "recall": 0.92608,
+  "f1": 0.9154968563407014,
+  "confusion_matrix": [
+    [
+      11287,
+      1213
+    ],
+    [
+      924,
+      11576
+    ]
+  ]
+}
