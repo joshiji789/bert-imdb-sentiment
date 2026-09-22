@@ -56,8 +56,15 @@ def _build_lora_model(strategy, model_name, lora_r, lora_alpha, lora_dropout, lo
             quantization_kwarg["quantization_config"] = BitsAndBytesConfig(
                 load_in_4bit = True, 
                 bnb_4bit_quant_type = "nf4",
-                bnb_4bit_compute_dtype = torch.bfloat16
+                bnb_4bit_compute_dtype = torch.bfloat16,
+                llm_int8_skip_modules = ["classifier"]  # copying a 4-bit layer produces
+                                        # a broken copy that never gets properly quantized.
+            
             )
+            # 4-bit weights must be placed on their final device at load time - moving
+            # a quantized model afterwards with model.to()/.cuda() corrupts the packed 
+            # quant state and crashes later inside bitsandbytes/transfomers.
+            quantization_kwarg["device_map"] = {"": torch.cuda.current_device()}
         else:
             # bitsandbytes 4 bit kernels and CUDA-only.
             # On CPU, or MAC we can't do 4bit quantization, so we run just the standard LoRA model instead.
@@ -102,8 +109,10 @@ def build_model(strategy, model_name, lora_r = 8, lora_alpha = 16, lora_dropout 
         model = AutoModelForSequenceClassification.from_pretrained(
             model_name, num_labels = NUM_LABELS, attn_implementation = "eager"
         )
-        # attn_implementation = "eager" is a new option in transformers which is used to speed up the attention computation.
-
+        # attn_implementation = "eager" forces the plain, unoptimized attention math.
+        # Have pinned it on every strategy so all 5 methods use the exact same attention 
+        # calculation - keeping the comparison between strategies fair, instead of some runs
+        # quietly using a faster but slightly different kernel.
         _freeze_all_except(model, trainable_prefixes = ("classifier"))
 
         return model

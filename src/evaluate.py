@@ -17,11 +17,13 @@ from sklearn.metrics import (
     f1_score,
     confusion_matrix
 )
+from src.utils import is_quantized
 
 # disables gradient tracking - on backward pass happends during evaluation
 @torch.no_grad()
 def evaluate_model(model, eval_loader, device):
-    model.to(device)
+    if not is_quantized(model):
+        model.to(device)
     model.eval()    # turn off dropout, so predictions are deterministic
 
     all_preds = []

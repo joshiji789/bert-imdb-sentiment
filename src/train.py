@@ -11,6 +11,8 @@ from pathlib import Path
 from torch.optim import AdamW
 from transformers import get_linear_schedule_with_warmup
 
+from src.utils import is_quantized
+
 logger = logging.getLogger(__name__)
 
 def train_model(model, train_loader, device, learning_rate, num_epochs,
@@ -28,7 +30,8 @@ def train_model(model, train_loader, device, learning_rate, num_epochs,
     warmup ratio:   gradually increase the learning rate at the start of training to stabilize optimzation and
                     preserve pretrained knowledge.
     """
-    model.to(device)
+    if not is_quantized(model):
+        model.to(device)
     model.train()
 
     # Only pass parameters that actually required gradients to the optimizer.

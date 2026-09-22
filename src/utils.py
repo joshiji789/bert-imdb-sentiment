@@ -36,3 +36,11 @@ def get_device():
         return torch.device("mps")
 
     return torch.device("cpu")
+
+## Quantized model check
+def is_quantized(model):
+    """
+    True for models loaded in 4-bit/8-bit via bitsandbytes (e.g. the qlora strategy).
+    Their weights are pinned to a device at load time.
+    """
+    return getattr(model, "is_loaded_in_4bit", False) or getattr(model, "is_loaded_in_8bit", False)
