@@ -13,11 +13,23 @@ zero-shot baseline head only | embeddings + all 12 trainsformer layers (frozen) 
 
 frozen transformer | embeddings + all 12 transformer layer (frozen) | pooler layer + classification layer
 
+full-fine-tuning | nothing | every parameter in the model
+
+## Adapter Family
+
 LoRA | the original BERT weights | small LoRA adapter matrics + classification 
 
 QLoRA | same as LoRA, base weights loaded in 4 bit (CUDA only)
 
-full-fine-tuning | nothing | every parameter in the model
+## Prompt Family
+
+prompt tuning | everything (frozen) | soft prompt embeddings (input only) + classification head
+
+prefix tuning | everything | per-layer prefix (Key and Value) + classification head
+
+p-tuning | everything | small prompt via LSTM/MLP (input only) + classification head
+
+p-tuning-v2 | everything | per-layer prefix (input no reparametrization) + classification head
 
 """
 
