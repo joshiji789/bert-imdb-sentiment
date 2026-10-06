@@ -6,7 +6,7 @@ eval_batch_size: 32
 num_epochs: 10
 max_seq_length: 256
 weight_decay: 0.01
-warwmup_ratio: 0.1
+warmup_ratio: 0.1
 seed: 42
 num_virtual_tokens: 20
 prompt_tuning_init: random

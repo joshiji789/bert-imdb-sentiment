@@ -69,7 +69,14 @@ def main():
         lora_r = config.get("lora_r", 8),
         lora_alpha = config.get("lora_alpha", 16),
         lora_dropout = config.get("lora_dropout", 0.1),
-        lora_target_modules = config.get("lora_target_modules", ["query", "value"])
+        lora_target_modules = config.get("lora_target_modules", ["query", "value"]),
+        num_virtual_tokens = config.get("num_virtual_tokens", 20),
+        prompt_tuning_init = config.get("prompt_tuning_init", "random"),
+        prompt_tuning_init_text = config.get("prompt_tuning_init_text"),
+        encoder_hidden_size = config.get("encoder_hidden_size", 128),
+        encoder_num_layers = config.get("encoder_num_layers", 2),
+        encoder_dropout = config.get("encoder_dropout", 0.0),
+        encoder_reparameterization_type = config.get("encoder_reparameterization_type", "MLP")
     )
 
     history = train_model(
