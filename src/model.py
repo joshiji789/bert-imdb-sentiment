@@ -37,6 +37,8 @@ import logging
 import torch
 from pathlib import Path
 from transformers import AutoModelForSequenceClassification
+
+from src.ft_promptFamily.promptFamily import PROMPT_FAMILY_STRATEGIES, build_prompt_family_model
 from src.utils import NUM_LABELS
 logger = logging.getLogger(__name__)
 
@@ -99,7 +101,9 @@ def _build_lora_model(strategy, model_name, lora_r, lora_alpha, lora_dropout, lo
     return get_peft_model(base_model, lora_config)
 
 def build_model(strategy, model_name, lora_r = 8, lora_alpha = 16, lora_dropout = 0.1,
-                lora_target_modules = ("query", "value")):
+                lora_target_modules = ("query", "value"), num_virtual_tokens = 20, prompt_tuning_init = "random",
+                prompt_tuning_init_text = None, encoder_hidden_size = 128, encoder_num_layers = 2,
+                encoder_dropout = 0.0, encoder_reparameterization_type = "MLP"):
 
     if strategy not in STRATEGIES:
         raise TypeError(f"Invalid Strategy: {strategy}. Must be one of the {STRATEGIES}", status_code = 400)
@@ -155,3 +159,16 @@ def build_model(strategy, model_name, lora_r = 8, lora_alpha = 16, lora_dropout 
             model_name, num_labels = NUM_LABELS, attn_implementation = "eager"
         )
         return model
+
+    """
+    """
+    if strategy in PROMPT_FAMILY_STRATEGIES:
+        return build_prompt_family_model(
+            strategy, model_name, 
+            num_virtual_tokens=num_virtual_tokens, 
+            prompt_tuning_init=prompt_tuning_init,
+            prompt_tuning_init_text=prompt_tuning_init_text, 
+            encoder_hidden_size=encoder_hidden_size, 
+            encoder_num_layers=encoder_num_layers,
+            encoder_dropout=encoder_dropout, 
+            encoder_reparameterization_type=encoder_reparameterization_type)

@@ -18,6 +18,8 @@ instead of trained directly.
 prefix tuning (Li and Liang 2021) and p-tuning-v2 (Liu et al. 2022) are both deep: The soft token is injected
 into the attention K/V of every transfomer layer. prefix tuning reparameterized the prefix through an MLP,
 while p-tuning-v2 removes that MLP and optimizes the per-layer prefix vectors directly.
+While point is that training 20 raw embedding vectors directly is unstable, and squeezing them through
+a narrow MLP actos as a regularizer that smooths the optimization landscape.
 """
 
 import logging
@@ -28,9 +30,55 @@ logger = logging.getLogger(__name__)
 
 PROMPT_FAMILY_STRATEGIES = ["prompt-tuning", "prefix-tuning", 'p-tuning', "p-tuning-v2"]
 
-def _build_prompt_tuning_config(model_name, nnum_virtual_tokens, prompt_tuning_init, 
+def _build_prompt_tuning_config(model_name, num_virtual_tokens, prompt_tuning_init, 
                                 prompt_tuning_init_text):
     """
     prompt-tuning: num_virtual_tokens trainable "soft prompt" embeddings
     are prepended to the input embeddings.
     """
+    from peft import PromptTuningConfig, PromptTuningInit, TaskType
+
+    init_kwargs = {}
+    if prompt_tuning_init == "text":
+        # TEXT init sees the soft prompt from the embeddings of a real sentence instead of 
+        # random noise - needs the same tokenizer the base model uses so the token ids line up.
+
+        init = PromptTuningInit.TEXT
+        init_kwargs["prompt_tuning_init_text"] = (
+            prompt_tuning_init_text
+            or 
+            "Classify if this movie revieww expresses a positive or negative sentiment."
+        )
+        init_kwargs["tokenizer_name_or_path"] = model_name
+
+    else:
+        init = PromptTuningInit.RANDOM
+    return PromptTuningConfig(
+        task_type = TaskType.SEQ_CLS,
+        num_virtual_tokens = num_virtual_tokens,
+        prompt_tuning_init = init,
+        **init_kwargs
+    )
+
+
+def build_prompt_family_model(strategy, model_name, num_virtual_tokens = 20,
+                              prompt_tuning_init = "random", prompt_tuning_init_text = None,
+                              encoder_hidden_size = 128, encoder_num_layers = 2,
+                               encoder_dropout = 0.0, encoder_reparameterization_type = "MLP"):
+    """
+    """
+    if strategy not in PROMPT_FAMILY_STRATEGIES:
+        raise TypeError(
+            f"Invalid prompt-family strategy: {strategy}, must be one of {PROMPT_FAMILY_STRATEGIES}"
+        )
+    from peft import get_peft_model
+    base_model = AutoModelForSequenceClassification.from_pretrained(
+        model_name, num_labels = NUM_LABELS, attn_implementation = "eager"
+        )
+
+    if strategy == "prompt-tuning":
+        peft_config = _build_prompt_tuning_config(
+            model_name, num_virtual_tokens, prompt_tuning_init, prompt_tuning_init_text
+        )
+
+    return get_peft_model(base_model, peft_config)
