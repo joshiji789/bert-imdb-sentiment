@@ -42,7 +42,8 @@ from src.ft_promptFamily.promptFamily import PROMPT_FAMILY_STRATEGIES, build_pro
 from src.utils import NUM_LABELS
 logger = logging.getLogger(__name__)
 
-STRATEGIES = ("pretrained", "head-only", "frozen-transformer", "full-finetune", "lora", "qlora")
+STRATEGIES = ("pretrained", "head-only", "frozen-transformer", "full-finetune", "lora", "qlora",
+              *PROMPT_FAMILY_STRATEGIES)
 
 # freeze all except function
 def _freeze_all_except(model, trainable_prefixes):
