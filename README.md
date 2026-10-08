@@ -51,24 +51,23 @@ python -m pip install torch torchvision torchaudio --index-url https://download.
 ```
 
 ### Commands to run the code
-- Command to run the head only fine-tuning with learning rate 10^(-3) and 10^(-4)
-python scripts/run_train.py --config configs/head-only.yaml --learning_rate 1e-3 --run_name head-only_lr1e-3
-python scripts/run_train.py --config configs/head-only.yaml --learning_rate 1e-4 --run_name head-only_lr1e-4
+#### Command to run the head only fine-tuning with learning rate 10^(-3) and 10^(-4)
+- python scripts/run_train.py --config configs/head-only.yaml --learning_rate 1e-3 --run_name head-only_lr1e-3
+- python scripts/run_train.py --config configs/head-only.yaml --learning_rate 1e-4 --run_name head-only_lr1e-4
 
 
-- Command to run the frozen-transformer fine-tuning with learning rate 10^(-3) and 10^(-4)
-python scripts/run_train.py --config configs/frozen-transformer.yaml --learning_rate 1e-3 --run_name frozen-transformer_lr1e-3
-python scripts/run_train.py --config configs/frozen-transformer.yaml --learning_rate 1e-4 --run_name frozen-transformer_lr1e-4
+#### Command to run the frozen-transformer fine-tuning with learning rate 10^(-3) and 10^(-4)
+- python scripts/run_train.py --config configs/frozen-transformer.yaml --learning_rate 1e-3 --run_name frozen-transformer_lr1e-3
+- python scripts/run_train.py --config configs/frozen-transformer.yaml --learning_rate 1e-4 --run_name frozen-transformer_lr1e-4
 
-- Commands to run the full-finetune where learning rate is 10^(-3) and 10^(-4) (But these values are two high for the full-fine tuning), so we have also used the \
-values of O(10^(-5)).
-python scripts/run_train.py --config configs/full-finetune.yaml --learning_rate 1e-3 --run_name full-finetune_lr1e-3
-python scripts/run_train.py --config configs/full-finetune.yaml --learning_rate 1e-4 --run_name full-finetune_lr1e-4
-python scripts/run_train.py --config configs/full-finetune.yaml --learning_rate 2e-5 --run_name full-finetune_lr2e-5
-python scripts/run_train.py --config configs/full-finetune.yaml --learning_rate 5e-5 --run_name full-finetune_lr5e-5
+#### Commands to run the full-finetune where learning rate is 10^(-3) and 10^(-4) (But these values are two high for the full-fine tuning), so we have also used the values of O(10^(-5)).
+- python scripts/run_train.py --config configs/full-finetune.yaml --learning_rate 1e-3 --run_name full-finetune_lr1e-3
+- python scripts/run_train.py --config configs/full-finetune.yaml --learning_rate 1e-4 --run_name full-finetune_lr1e-4
+- python scripts/run_train.py --config configs/full-finetune.yaml --learning_rate 2e-5 --run_name full-finetune_lr2e-5
+- python scripts/run_train.py --config configs/full-finetune.yaml --learning_rate 5e-5 --run_name full-finetune_lr5e-5
 
-- Commands to run the LoRA and QLoRA with the learning rate of 2e-4 and 5e-5.
-python scripts/run_train.py --config configs/lora.yaml --learning_rate 2e-4 --run_name lora_lr2e-4
-python scripts/run_train.py --config configs/lora.yaml --learning_rate 5e-5 --run_name lora_lr5e-5
-python scripts/run_train.py --config configs/qlora.yaml --learning_rate 2e-4 --run_name qlora_lr2e-4
-python scripts/run_train.py --config configs/qlora.yaml --learning_rate 5e-5 --run_name qlora_lr5e-5
+#### Commands to run the LoRA and QLoRA with the learning rate of 2e-4 and 5e-5.
+- python scripts/run_train.py --config configs/lora.yaml --learning_rate 2e-4 --run_name lora_lr2e-4
+- python scripts/run_train.py --config configs/lora.yaml --learning_rate 5e-5 --run_name lora_lr5e-5
+- python scripts/run_train.py --config configs/qlora.yaml --learning_rate 2e-4 --run_name qlora_lr2e-4
+- python scripts/run_train.py --config configs/qlora.yaml --learning_rate 5e-5 --run_name qlora_lr5e-5

@@ -162,6 +162,7 @@ def build_model(strategy, model_name, lora_r = 8, lora_alpha = 16, lora_dropout 
         return model
 
     """
+    For prompt-family strategies, share the sane code -
     """
     if strategy in PROMPT_FAMILY_STRATEGIES:
         return build_prompt_family_model(
