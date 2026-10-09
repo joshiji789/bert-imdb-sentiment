@@ -122,7 +122,14 @@ def build_prompt_family_model(strategy, model_name, num_virtual_tokens = 20,
             num_virtual_tokens, encoder_hidden_size, prefix_projection = True
         )
 
-    
-        
+    elif strategy == "p-tuning":
+        peft_config = _build_p_tuning_config(
+            num_virtual_tokens, encoder_hidden_size, encoder_num_layers,
+            encoder_dropout, encoder_reparameterization_type
+        )
+    elif strategy == "p-tuning-v2":
+        peft_config = _build_prefix_tuning_config(
+            num_virtual_tokens, encoder_hidden_size, prefix_projection = False
+        )
 
     return get_peft_model(base_model, peft_config)
