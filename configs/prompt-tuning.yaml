@@ -11,5 +11,5 @@ seed: 42
 num_virtual_tokens: 20
 prompt_tuning_init: random
 train_subset_size: null
-output_dir: results/checkpoint
+output_dir: results/checkpoints
 run_name: prompt-tuning_lr1e-2
