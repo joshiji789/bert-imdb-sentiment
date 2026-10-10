@@ -1,0 +1,74 @@
+{
+  "run_name": "p-tuning_lr1e-2",
+  "strategy": "p-tuning",
+  "model_name": "bert-base-uncased",
+  "learning_rate": 0.01,
+  "num_epochs": 10,
+  "checkpoint_dir": "results\\checkpoints\\p-tuning_lr1e-2",
+  "train_history": [
+    {
+      "epoch": 1,
+      "loss": 0.4341425972876445,
+      "seconds": 1296.4500758647919
+    },
+    {
+      "epoch": 2,
+      "loss": 0.3556514388870259,
+      "seconds": 1299.8657224178314
+    },
+    {
+      "epoch": 3,
+      "loss": 0.3380462163945632,
+      "seconds": 1295.3287739753723
+    },
+    {
+      "epoch": 4,
+      "loss": 0.4245265993728095,
+      "seconds": 1296.0186274051666
+    },
+    {
+      "epoch": 5,
+      "loss": 0.42315047928153054,
+      "seconds": 1288.9095809459686
+    },
+    {
+      "epoch": 6,
+      "loss": 0.39624869419105097,
+      "seconds": 1282.4713351726532
+    },
+    {
+      "epoch": 7,
+      "loss": 0.3604999618878733,
+      "seconds": 1280.6365280151367
+    },
+    {
+      "epoch": 8,
+      "loss": 0.339834699049525,
+      "seconds": 1300.0472569465637
+    },
+    {
+      "epoch": 9,
+      "loss": 0.3194964951647155,
+      "seconds": 1282.1704986095428
+    },
+    {
+      "epoch": 10,
+      "loss": 0.30790287023200846,
+      "seconds": 1290.8768639564514
+    }
+  ],
+  "accuracy": 0.8824,
+  "precision": 0.9018833025054649,
+  "recall": 0.85816,
+  "f1": 0.8794785603017136,
+  "confusion_matrix": [
+    [
+      11333,
+      1167
+    ],
+    [
+      1773,
+      10727
+    ]
+  ]
+}
