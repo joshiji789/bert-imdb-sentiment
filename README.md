@@ -75,5 +75,6 @@ python -m pip install torch torchvision torchaudio --index-url https://download.
 
 #### Commands to run the Prompt Family Fine-Tuning
 - python scripts/run_train.py --config configs/prompt-tuning.yaml --learning_rate 1e-2 --run_name prompt-tuning_lr1e-2
-- python scripts/run_train.py --config configs/prompt-tuning.yaml --learning_rate 1e-2 --run_name prompt-tuning_lr1e-2
+-  python scripts/run_train.py --config configs/prompt-tuning.yaml --precision mixed-precision --run_name prompt-tuninglr1e-2_mixed-precision
 - python scripts/run_train.py --config configs/prefix-tuning.yaml --learning_rate 1e-3 --run_name prefix-tuning_lr1e-3
+- python scripts/run_train.py --config configs/prefix-tuning.yaml --learning_rate 1e-3 --precision mixed-precision --run_name prefix-tuning_lr1e-3_mixed-precision
