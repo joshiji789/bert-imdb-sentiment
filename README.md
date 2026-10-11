@@ -78,3 +78,5 @@ python -m pip install torch torchvision torchaudio --index-url https://download.
 -  python scripts/run_train.py --config configs/prompt-tuning.yaml --precision mixed-precision --run_name prompt-tuninglr1e-2_mixed-precision
 - python scripts/run_train.py --config configs/prefix-tuning.yaml --learning_rate 1e-3 --run_name prefix-tuning_lr1e-3
 - python scripts/run_train.py --config configs/prefix-tuning.yaml --learning_rate 1e-3 --precision mixed-precision --run_name prefix-tuning_lr1e-3_mixed-precision
+- python scripts/run_train.py --config configs/p-tuning.yaml --learning_rate 1e-2 --precision mixed-precision --run_name p-tuning_lr1e-2_mixed-precision
+- python scripts/run_train.py --config configs/p-tuning-v2.yaml --learning_rate 1e-3 --precision mixed-precision --run_name p-tuning-v2_lr1e-3_mixed-precisiongit 
