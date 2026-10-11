@@ -71,3 +71,9 @@ python -m pip install torch torchvision torchaudio --index-url https://download.
 - python scripts/run_train.py --config configs/lora.yaml --learning_rate 5e-5 --run_name lora_lr5e-5
 - python scripts/run_train.py --config configs/qlora.yaml --learning_rate 2e-4 --run_name qlora_lr2e-4
 - python scripts/run_train.py --config configs/qlora.yaml --learning_rate 5e-5 --run_name qlora_lr5e-5
+
+
+#### Commands to run the Prompt Family Fine-Tuning
+- python scripts/run_train.py --config configs/prompt-tuning.yaml --learning_rate 1e-2 --run_name prompt-tuning_lr1e-2
+- python scripts/run_train.py --config configs/prompt-tuning.yaml --learning_rate 1e-2 --run_name prompt-tuning_lr1e-2
+- python scripts/run_train.py --config configs/prefix-tuning.yaml --learning_rate 1e-3 --run_name prefix-tuning_lr1e-3

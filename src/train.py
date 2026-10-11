@@ -8,6 +8,7 @@ import logging
 import time
 from pathlib import Path
 
+import torch
 from torch.optim import AdamW
 from transformers import get_linear_schedule_with_warmup
 
@@ -16,7 +17,7 @@ from src.utils import is_quantized
 logger = logging.getLogger(__name__)
 
 def train_model(model, train_loader, device, learning_rate, num_epochs,
-                weight_decay = 0.01, warmup_ratio = 0.1):
+                weight_decay = 0.01, warmup_ratio = 0.1, use_amp = False):
     """
     Why AdamW: different weights often need different learning rate.
     - Take largest step when gradients are small
@@ -29,6 +30,8 @@ def train_model(model, train_loader, device, learning_rate, num_epochs,
     wewight_decay:  prevent weights from becoming excessing large (reduces overfitting, keep parameters small)
     warmup ratio:   gradually increase the learning rate at the start of training to stabilize optimzation and
                     preserve pretrained knowledge.
+    use_amp:        Run the forward pass under bf16 autocast, only ment for the prompt-family
+                    strategies - bf16  has the same exponent range as fp32 so no loss scaling is needed, unlike fp16
     """
     if not is_quantized(model):
         model.to(device)
@@ -58,7 +61,12 @@ def train_model(model, train_loader, device, learning_rate, num_epochs,
             labels = batch["label"].to(device)
 
             # Passing "labels" makes the model compute and return the loss itself
-            outputs = model(input_ids = input_ids, attention_mask = attention_mask, labels = labels)
+            # Only the forward pass runs under autocast - PyTorch's autograd remembers which dtype
+            # can forward op run in any automatically replays backward in the matching dtype.
+            # We have used bf16 (not fp16), there's no GradScaler/loss-scaling step either,
+            # bf16 has the same exponent range as fp32. so gradient underflow isn't a concer the way it is with fp16.
+            with torch.autocast(device_type = device.type, dtype = torch.bfloat16, enabled = use_amp):
+                outputs = model(input_ids = input_ids, attention_mask = attention_mask, labels = labels)
             outputs.loss.backward()
             optimizer.step()
             scheduler.step()
