@@ -16,7 +16,7 @@ sys.path.insert(0,str(Path(__file__).resolve().parent.parent))
 
 from src.data import build_eval_dataloader, build_train_dataloader, load_tokenized_imdb
 from src.evaluate import evaluate_model
-from src.model import build_model
+from src.model import PROMPT_FAMILY_STRATEGIES, build_model
 from src.train import save_checkpoint, train_model
 from src.utils import get_device, set_seed
 
@@ -25,6 +25,8 @@ def parse_args():
     parser.add_argument("--config", required = True, help = "Path to the YAML config")
     parser.add_argument("--learning_rate", type = float, default=None, help = "Override the config's learning_rate")
     parser.add_argument("--run_name", type = str, default = None, help = "Overrides the config's run_name")
+    parser.add_argument("--precision", type = str, default=None, choices = ["fp32", "mixed-precision"],
+                        help = "Overrides the default precision")
     return parser.parse_args()
 
 def main():
@@ -40,6 +42,9 @@ def main():
 
     if args.run_name is not None:
         config["run_name"] = args.run_name
+    
+    if args.precision is not None:
+        config["precision"] = args.precision
 
     run_name = config.get("run_name") or f"{config['strategy']}-lr{config['learning_rate']}"
 
@@ -79,6 +84,11 @@ def main():
         encoder_reparameterization_type = config.get("encoder_reparameterization_type", "MLP")
     )
 
+    train_precision = config.get("precision") or (
+        "mixed-precision" if config["strategy"] in PROMPT_FAMILY_STRATEGIES else "fp32"
+    )
+    use_amp = train_precision == "mixed-precision"
+
     history = train_model(
         model, 
         train_loader, 
@@ -86,7 +96,8 @@ def main():
         learning_rate = config["learning_rate"],
         num_epochs = config.get("num_epochs", 10),
         weight_decay = config.get("weight_decay", 0.01),
-        warmup_ratio = config.get("warmup_ratio", 0.1)
+        warmup_ratio = config.get("warmup_ratio", 0.1),
+        use_amp = use_amp
     )
 
     metrics = evaluate_model(model, eval_loader, device)
@@ -98,6 +109,7 @@ def main():
     results = {
         "run_name": run_name,
         "strategy": config["strategy"],
+        "train_precision": train_precision,
         "model_name": config["model_name"],
         "learning_rate": config["learning_rate"],
         "num_epochs": config.get("num_epochs", 10),
