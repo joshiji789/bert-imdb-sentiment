@@ -1,21 +1,30 @@
-# bert-imdb-sentiment
-## GOAL
-Compare 6 things on the exact same untouched IMDB test set (accuracy, precision, recall, F1, confusion matrix)
-1. **Pretrained BERT** — zero-shot, no training at all. Raw `bert-base-uncased` with a randomly initialized classifier head; expected to land close to chance (~50%), since the head has never learned anything.
-2. **Head-only fine-tune** — BERT itself (embeddings + all 12 transformer layers + pooler) fully frozen; only the final linear classifier layer is trained. The purest "linear probe on frozen BERT features" baseline.
-3. **Frozen** — same as head-only, but the pooler layer (the small dense+tanh layer that turns BERT's `[CLS]` token into a fixed-size vector) is also unfrozen and trained alongside the classifier.
-4. **Full fine-tuning** — every parameter in the model is trainable (embeddings, all 12 transformer layers, pooler, classifier).
-5. **LoRA fine-tuning** — BERT's original weights stay frozen; small low-rank adapter matrices are injected into the attention Query/Value projections and trained, along with the classifier head.
-6. **QLoRA fine-tuning** — same as LoRA, but the frozen base weights are loaded in 4-bit precision. Requires a CUDA GPU (bitsandbytes); falls back to standard LoRA on this machine (Apple Silicon / MPS, no CUDA).
+# BERT-IMDB Sentiment — A Head-to-Head Study of 9 Fine-Tuning Strategies
 
-Plus we'll sweep a couple of different learning rates per method (methods 2–6 — there's nothing to tune for the pretrained baseline).
+**Author:** Anubhav Joshi
 
-The Results below shows the after fine-tuning: \
-<img src="results/figures/loss_vs_epoch.png" alt="Loss vs Epoch" width="800"/>
+**Base model:** `bert-base-uncased` (110M parameters).
 
-Here's the proposed project structure:
+**Dataset:** IMDB (25k train / 25k test, untouched)
 
-```
+**Stack:** PyTorch, Hugging Face `transformers` / `datasets` / `peft`, bitsandbytes (QLoRA), Apple Silicon (MPS) + CUDA
+
+## Analyses
+
+1. **Learning rates and fine-tuning methods** — Compare learning-rate runs across full fine-tuning, frozen and head-only approaches, LoRA/QLoRA, and prompt methods (prompt tuning, prefix tuning, P-tuning, and P-tuning v2). Results include accuracy, precision, recall, F1, confusion matrices, and loss curves.
+2. **Mixed precision** — Compare full-precision and bfloat16 mixed-precision training for prompt-family methods. In the saved runs, mixed precision reduced training time by roughly 2.6–2.8× per epoch while producing similar loss curves and test metrics. Timings depend on hardware.
+
+## Results
+
+![Training loss across models](results/figures/loss_vs_epoch.png)
+
+![Metrics by fine-tuning method](results/figures/all_metrics_by_main_family.png)
+
+![Full-precision and mixed-precision loss comparison](results/figures/loss_cs_epoch_prompt_family.png)
+
+Additional plots and per-run metrics are in [`results/figures`](results/figures/) and [`results/metrics`](results/metrics/).
+
+## Project Structure
+```txt
  bert-imdb-sentiment/
  ├── README.md
  ├── requirements.txt
@@ -44,39 +53,23 @@ Here's the proposed project structure:
  │ └── checkpoints/                 # saved fine-tuned weights (gitignored — large files)
  └── tests/
  └── test_data.py                   # sanity checks on tokenization/splits
- ```
-
-```
-python -m pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu126    
 ```
 
-### Commands to run the code
-#### Command to run the head only fine-tuning with learning rate 10^(-3) and 10^(-4)
-- python scripts/run_train.py --config configs/head-only.yaml --learning_rate 1e-3 --run_name head-only_lr1e-3
-- python scripts/run_train.py --config configs/head-only.yaml --learning_rate 1e-4 --run_name head-only_lr1e-4
 
+## Run
 
-#### Command to run the frozen-transformer fine-tuning with learning rate 10^(-3) and 10^(-4)
-- python scripts/run_train.py --config configs/frozen-transformer.yaml --learning_rate 1e-3 --run_name frozen-transformer_lr1e-3
-- python scripts/run_train.py --config configs/frozen-transformer.yaml --learning_rate 1e-4 --run_name frozen-transformer_lr1e-4
+Install the dependencies:
 
-#### Commands to run the full-finetune where learning rate is 10^(-3) and 10^(-4) (But these values are two high for the full-fine tuning), so we have also used the values of O(10^(-5)).
-- python scripts/run_train.py --config configs/full-finetune.yaml --learning_rate 1e-3 --run_name full-finetune_lr1e-3
-- python scripts/run_train.py --config configs/full-finetune.yaml --learning_rate 1e-4 --run_name full-finetune_lr1e-4
-- python scripts/run_train.py --config configs/full-finetune.yaml --learning_rate 2e-5 --run_name full-finetune_lr2e-5
-- python scripts/run_train.py --config configs/full-finetune.yaml --learning_rate 5e-5 --run_name full-finetune_lr5e-5
+```bash
+pip install -r requirements.txt
+```
 
-#### Commands to run the LoRA and QLoRA with the learning rate of 2e-4 and 5e-5.
-- python scripts/run_train.py --config configs/lora.yaml --learning_rate 2e-4 --run_name lora_lr2e-4
-- python scripts/run_train.py --config configs/lora.yaml --learning_rate 5e-5 --run_name lora_lr5e-5
-- python scripts/run_train.py --config configs/qlora.yaml --learning_rate 2e-4 --run_name qlora_lr2e-4
-- python scripts/run_train.py --config configs/qlora.yaml --learning_rate 5e-5 --run_name qlora_lr5e-5
+Run a configured experiment:
+```bash
+python scripts/run_train.py --config configs/prompt-tuning.yaml
+```
 
-
-#### Commands to run the Prompt Family Fine-Tuning
-- python scripts/run_train.py --config configs/prompt-tuning.yaml --learning_rate 1e-2 --run_name prompt-tuning_lr1e-2
--  python scripts/run_train.py --config configs/prompt-tuning.yaml --precision mixed-precision --run_name prompt-tuninglr1e-2_mixed-precision
-- python scripts/run_train.py --config configs/prefix-tuning.yaml --learning_rate 1e-3 --run_name prefix-tuning_lr1e-3
-- python scripts/run_train.py --config configs/prefix-tuning.yaml --learning_rate 1e-3 --precision mixed-precision --run_name prefix-tuning_lr1e-3_mixed-precision
-- python scripts/run_train.py --config configs/p-tuning.yaml --learning_rate 1e-2 --precision mixed-precision --run_name p-tuning_lr1e-2_mixed-precision
-- python scripts/run_train.py --config configs/p-tuning-v2.yaml --learning_rate 1e-3 --precision mixed-precision --run_name p-tuning-v2_lr1e-3_mixed-precisiongit 
+Override the learning rate or precision if needed:
+```bash
+python scripts/run_train.py --config configs/prompt-tuning.yaml --learning_rate 0.01 --precision mixed-precision
+```
